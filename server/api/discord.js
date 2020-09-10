@@ -13,9 +13,11 @@ const redirect = encodeURIComponent('http://localhost:5000/api/discord/callback'
 
 router.get('/login', (request, response) => {
   response.redirect(`https://discord.com/api/oauth2/authorize?client_id=${PRACTICE_CLIENT_ID}&redirect_uri=${redirect}&response_type=code&scope=guilds`);
+
+  
 });
 
-router.get('./callback', catchAsync(async (request, response) => {
+router.get('/callback', catchAsync(async (request, res) => {
   if (!request.query.code) throw new Error('NoCodeProvided');
   const code = request.query.code;
   const credentials = btoa(`${PRACTICE_CLIENT_ID}:${PRACTICE_CLIENT_SECRET}`);
@@ -26,7 +28,7 @@ router.get('./callback', catchAsync(async (request, response) => {
     },
   });
   const json = await response.json();
-  response.redirect(`/?token=${json.access_token}`);
+  res.redirect(`/?token=${json.access_token}`);
 }));
 
 
@@ -43,8 +45,5 @@ router.get('./callback', catchAsync(async (request, response) => {
 // 29: redirect to homepage with token ****don't do this for real app
 
 /*=====  End of Explanation of 18-30  ======*/
-
-
-
 
 module.exports = router;
